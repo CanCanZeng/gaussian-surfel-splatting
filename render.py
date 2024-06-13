@@ -6,7 +6,7 @@ from tqdm import tqdm
 from os import makedirs
 from gaussian_renderer import render
 import torchvision
-from utils.general_utils import safe_state, poisson_mesh
+from utils.general_utils import safe_state
 from utils.image_utils import psnr, depth2rgb, normal2rgb, depth2normal, match_depth, resample_points, mask_prune, grid_prune, depth2viewDir, img2video
 from utils.graphics_utils import getProjectionMatrix
 from utils.camera_utils import interpolate_camera
@@ -15,7 +15,6 @@ from torchvision.utils import save_image
 from arguments import ModelParams, PipelineParams, get_combined_args
 from gaussian_renderer import GaussianModel
 from torch.utils.cpp_extension import load
-import pymeshlab
 import time
 
 
@@ -85,7 +84,7 @@ def render_set(model_path, use_mask, name, iteration, views, gaussians, pipeline
         resampled = torch.cat(resampled, 0)
         mesh_path = f'{model_path}/poisson_mesh_{poisson_depth}'
         
-        poisson_mesh(mesh_path, resampled[:, :3], resampled[:, 3:6], resampled[:, 6:], poisson_depth, 1 * 1e-4)
+        # poisson_mesh(mesh_path, resampled[:, :3], resampled[:, 3:6], resampled[:, 6:], poisson_depth, 1 * 1e-4)
 
 
 

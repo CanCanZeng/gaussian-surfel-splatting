@@ -151,11 +151,11 @@ class Scene:
                 # print(center)
                 # print(i.T@i.R)
                 # colors.append([1, 1, 1, 1.0] if j == 0 else [0, 0, 0, 0.0])
-        import pymeshlab
-        import numpy as np
-        ms = pymeshlab.MeshSet()
-        ms.add_mesh(pymeshlab.Mesh(vertex_matrix=np.array(points)))
-        ms.save_current_mesh('test/cameras.ply')
+        # import pymeshlab
+        # import numpy as np
+        # ms = pymeshlab.MeshSet()
+        # ms.add_mesh(pymeshlab.Mesh(vertex_matrix=np.array(points)))
+        # ms.save_current_mesh('test/cameras.ply')
         
     def pass_pose(self, s0, s1):
         c0 = self.getTrainCameras(s0)
