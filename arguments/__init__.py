@@ -61,7 +61,7 @@ class ModelParams(ParamGroup):
         self._use_mask = 1
         self.normalize_depth = True
         self.perpix_depth = True
-        self.mono_normal = True
+        self.mono_normal = 1
         super().__init__(parser, "Loading Parameters", sentinel)
 
     def extract(self, args):

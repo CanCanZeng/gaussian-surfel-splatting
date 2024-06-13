@@ -140,7 +140,11 @@ def readColmapCameras(cam_extrinsics, cam_intrinsics, images_folder):
         try:
             mask = load_mask(f'{images_folder}/../mask/{image_name[-3:]}.png')[None]
         except FileNotFoundError:
-            mask = np.ones([1, image.size[1], image.size[0]]).astype(np.float32)
+            try:
+                mask = load_mask(f'{images_folder}/../mask/{image_name}.png')[None]
+                mask = 1 - mask
+            except FileNotFoundError:
+                mask = np.ones([1, image.size[1], image.size[0]]).astype(np.float32)
 
         cam_info = CameraInfo(uid=uid, R=R, T=T, FovY=FovY, FovX=FovX, prcppoint=prcppoint, image=image,
                               image_path=image_path, image_name=image_name, width=width, height=height, mask=mask, mono=mono)
