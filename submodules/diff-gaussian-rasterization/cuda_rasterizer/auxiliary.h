@@ -160,7 +160,7 @@ __forceinline__ __device__ bool in_frustum(
 	float expand = 0.2;
 	if (p_view.z < 0 || p_pix.x < x0 - w * expand || p_pix.x >= x1 + w * expand || p_pix.y < y0 - h * expand || p_pix.y >= y1 + h * expand)
 	{
-		if (prefiltered)
+		if (prefiltered)  // 所有调用的地方prefiltered都是false，所以不用管
 		{
 			printf("Point is filtered although prefiltered is set. This shouldn't happen!");
 			__trap();

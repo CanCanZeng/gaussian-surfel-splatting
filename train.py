@@ -92,6 +92,13 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         patch_size = [float('inf'), float('inf')]
 
         render_pkg = render(viewpoint_cam, gaussians, pipe, background, patch_size)
+        # render 3xHxW 渲染的彩色图像
+        # normal 3xHxW 渲染的法向量
+        # depth 1xHxW 渲染的深度图
+        # opac  1xHxW 渲染时每个像素的累积不透明度，如果为0，表示没有高斯球投射到这个像素
+        # viewspace_points  Nx3
+        # visibility_filter N  每个高斯球在当前视角下是否可见
+        # radii   N    似乎是高斯球在当前视角下投影的半径
         image, normal, depth, opac, viewspace_point_tensor, visibility_filter, radii = \
             render_pkg["render"], render_pkg["normal"], render_pkg["depth"], render_pkg["opac"], \
             render_pkg["viewspace_points"], render_pkg["visibility_filter"], render_pkg["radii"]
@@ -119,7 +126,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
             loss_monoN = cos_loss(normal, monoN, weight=mask_gt)
             # loss_depth = l1_loss(depth * mask_match, monoD_match)
 
-        loss_surface = cos_loss(resize_image(normal, 1), resize_image(d2n, 1), thrsh=np.pi*1/10000 , weight=1)
+        loss_surface = cos_loss(resize_image(normal, 1), resize_image(d2n, 1), thrsh=np.pi*1/10000 , weight=1)  # consistency loss
         
         opac_ = gaussians.get_opacity - 0.5
         opac_mask = torch.gt(opac_, 0.01) * torch.le(opac_, 0.99)

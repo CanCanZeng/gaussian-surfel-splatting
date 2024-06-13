@@ -65,7 +65,7 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
     scales = None
     rotations = None
     cov3D_precomp = None
-    if pipe.compute_cov3D_python:
+    if pipe.compute_cov3D_python:  # 这里是 False，作者说不会用cov3D
         cov3D_precomp = pc.get_covariance(scaling_modifier)
     else:
         scales = pc.get_scaling
@@ -79,8 +79,8 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
     # from SHs in Python, do it. If not, then SH -> RGB conversion will be done by rasterizer.
     shs = None
     colors_precomp = None
-    if override_color is None:
-        if pipe.convert_SHs_python:
+    if override_color is None:  # 所有调用的地方 override_color都是 None
+        if pipe.convert_SHs_python: # 这里是 False，下面的代码不会被用到
             shs_view = pc.get_features.transpose(1, 2).view(-1, 3, (pc.max_sh_degree+1)**2)
             dir_pp = (pc.get_xyz - viewpoint_camera.camera_center.repeat(pc.get_features.shape[0], 1))
             dir_pp_normalized = dir_pp/dir_pp.norm(dim=1, keepdim=True)
@@ -94,14 +94,14 @@ def render(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor, 
 
     # Rasterize visible Gaussians to image, obtain their radii (on screen). 
     rendered_image, rendered_normal, rendered_depth, rendered_opac, radii = rasterizer(
-        means3D = means3D,
-        means2D = means2D,
-        shs = shs,
-        colors_precomp = colors_precomp,
-        opacities = opacity,
-        scales = scales,
-        rotations = rotations,
-        cov3D_precomp = cov3D_precomp)
+        means3D = means3D,   # Nx3
+        means2D = means2D,   # Nx3 输入都是 0
+        shs = shs,    # Nx16x3
+        colors_precomp = colors_precomp,   # None
+        opacities = opacity,  # Nx1 这里是真实的opacity，是0～1范围的值
+        scales = scales,  # Nx3 真实的scale，而不是log(scale)
+        rotations = rotations,    # Nx4 归一化后的四元数
+        cov3D_precomp = cov3D_precomp)    # None
 
     # Those Gaussians that were frustum culled or had a radius of 0 were not visible.
     # They will be excluded from value updates used in the splitting criteria.

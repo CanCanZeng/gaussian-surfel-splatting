@@ -18,6 +18,8 @@
 
 namespace CudaRasterizer
 {
+	// 把ptr指针指向chunk，并做128位字节对齐
+	// 然后把chunk指针往后移动count位，同样移动后的指针也是128位对齐的
 	template <typename T>
 	static void obtain(char*& chunk, T*& ptr, std::size_t count, std::size_t alignment)
 	{

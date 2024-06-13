@@ -168,7 +168,7 @@ class GaussianModel:
         # scales = torch.log(torch.ones((len(fused_point_cloud), 3)).cuda() * 0.02)
         
         if self.config[0] > 0:
-            if np.abs(np.sum(pcd.normals)) < 1:
+            if np.abs(np.sum(pcd.normals)) < 1:    # 把点云复制4次，然后生成随机的法向量，转成旋转矩阵。相当于原来的每个点都生成了4个随机的朝向
                 dup = 4
                 fused_point_cloud = torch.cat([fused_point_cloud for _ in range(dup)], 0)
                 fused_color = torch.cat([fused_color for _ in range(dup)], 0)
@@ -192,7 +192,7 @@ class GaussianModel:
         
         features = torch.zeros((fused_color.shape[0], 3, (self.max_sh_degree + 1) ** 2)).float().cuda()
         features[:, :3, 0 ] = fused_color
-        features[:, 3:, 1:] = 0.0
+        features[:, 3:, 1:] = 0.0  # useless code
 
         opacities = inverse_sigmoid(0.1 * torch.ones((fused_point_cloud.shape[0], 1), dtype=torch.float, device="cuda"))
 
@@ -465,6 +465,7 @@ class GaussianModel:
         self.prune_points(prune_filter)
 
     def densify_and_clone(self, grads, grad_threshold, scene_extent, pre_mask=True):
+        # 位置梯度大并且scale比较小的，需要进行复制
         # Extract points that satisfy the gradient condition
         selected_pts_mask = torch.where(torch.norm(grads, dim=-1) >= grad_threshold, True, False)
         # selected_pts_mask += (grad_rot > grad_rot_thrsh).squeeze()

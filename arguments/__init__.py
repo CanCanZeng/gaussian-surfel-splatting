@@ -88,7 +88,7 @@ class OptimizationParams(ParamGroup):
         self.cutoff_lr = 0.001 * 0
         self.scaling_lr = 0.005 * 1
         self.rotation_lr = 0.001 * 1
-        self.camera_lr = 0.000
+        self.camera_lr = 0.000    # 优化相机位姿的学习率，直接设置为0，没有使用
         self.percent_dense = 0.01
         self.lambda_dssim = 0.2
         self.densification_interval = 100

@@ -209,7 +209,7 @@ int CudaRasterizer::Rasterizer::forward(
 	std::function<char* (size_t)> geometryBuffer,
 	std::function<char* (size_t)> binningBuffer,
 	std::function<char* (size_t)> imageBuffer,
-	const int P, int D, int M,
+	const int P, int D, int M, // P是gaussian个数，D是active SH的degree，M是SH的最大维度
 	const float* background,
 	const int width, int height,
 	const float* means3D,
@@ -242,7 +242,7 @@ int CudaRasterizer::Rasterizer::forward(
 	char* chunkptr = geometryBuffer(chunk_size);
 	GeometryState geomState = GeometryState::fromChunk(chunkptr, P);
 
-	if (radii == nullptr)
+	if (radii == nullptr)  // 不会执行括号里面的代码
 	{
 		radii = geomState.internal_radii;
 	}
@@ -295,6 +295,7 @@ int CudaRasterizer::Rasterizer::forward(
 		config
 	), debug)
 
+	// 计算累加和
 	// Compute prefix sum over full list of touched tile counts by Gaussians
 	// E.g., [2, 3, 0, 2, 1] -> [2, 5, 5, 7, 8]
 	CHECK_CUDA(cub::DeviceScan::InclusiveSum(geomState.scanning_space, geomState.scan_size, geomState.tiles_touched, geomState.point_offsets, P), debug)
