@@ -113,8 +113,10 @@ def render2d(viewpoint_camera, pc : GaussianModel, pipe, bg_color : torch.Tensor
     
     # get expected depth map
     rendered_depth = allmap[0:1]
+    rendered_depth_normalized = rendered_depth / rendered_opac
+    rendered_depth_normalized = torch.nan_to_num(rendered_depth_normalized, 0, 0)
 
     # Those Gaussians that were frustum culled or had a radius of 0 were not visible.
     # They will be excluded from value updates used in the splitting criteria.
-    return {"render": rendered_image, "normal": rendered_normal, "depth": rendered_depth, "opac": rendered_opac,
+    return {"render": rendered_image, "normal": rendered_normal, "depth": rendered_depth_normalized, "opac": rendered_opac,
             "viewspace_points": screenspace_points, "visibility_filter" : radii > 1, "radii": radii}

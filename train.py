@@ -92,7 +92,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         background = torch.rand((3), dtype=torch.float32, device="cuda") if dataset.random_background else background
         patch_size = [float('inf'), float('inf')]
 
-        render_pkg = render(viewpoint_cam, gaussians, pipe, background, patch_size)
+        render_pkg = render2d(viewpoint_cam, gaussians, pipe, background, patch_size)
         # render 3xHxW 渲染的彩色图像
         # normal 3xHxW 渲染的法向量
         # depth 1xHxW 渲染的深度图
