@@ -14,6 +14,7 @@ import torch
 from random import randint
 from utils.loss_utils import l1_loss, ssim, cos_loss, bce_loss, knn_smooth_loss
 from gaussian_renderer import render, network_gui
+from gaussian_renderer2d import render2d
 import numpy as np
 import sys
 from scene import Scene, GaussianModel

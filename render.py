@@ -5,6 +5,7 @@ import os
 from tqdm import tqdm
 from os import makedirs
 from gaussian_renderer import render
+from gaussian_renderer2d import render2d
 import torchvision
 from utils.general_utils import safe_state
 from utils.image_utils import psnr, depth2rgb, normal2rgb, depth2normal, match_depth, resample_points, mask_prune, grid_prune, depth2viewDir, img2video
@@ -35,7 +36,7 @@ def render_set(model_path, use_mask, name, iteration, views, gaussians, pipeline
     psnr_all = []
     for idx, view in enumerate(tqdm(views, desc="Rendering progress")):
         background = torch.zeros((3), dtype=torch.float32, device="cuda")
-        render_pkg = render(view, gaussians, pipeline, background, [float('inf'), float('inf')])
+        render_pkg = render2d(view, gaussians, pipeline, background, [float('inf'), float('inf')])
 
         image, normal, depth, opac, viewspace_point_tensor, visibility_filter, radii = \
             render_pkg["render"], render_pkg["normal"], render_pkg["depth"], render_pkg["opac"], \
