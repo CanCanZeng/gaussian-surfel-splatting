@@ -1,3 +1,13 @@
+# Major changes
+* <span style="font-size: larger;">2024.06.17</span>
+1. Removed pymeshlab related code, because pymeshlab does not work on my computer
+2. Add diff-surfel-rasterization submodule proposed by 2DGS
+
+<br>
+<br>
+<br>
+
+
 # High-quality Surface Reconstruction using Gaussian Surfels
 <!-- [Pinxuan Dai](https://turandai.github.io/)\*, 
 [Jiamin Xu](https://superxjm.github.io/)\*, 
